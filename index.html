@@ -546,9 +546,20 @@ body {
     </div>
     <div class="field-grid">
       <input id="custName"  type="text" class="form-input" placeholder="اسمك 👤">
-      <input id="custPhone" type="tel"  class="form-input" placeholder="رقمك بدون رمز الدولة (يبدأ بـ4)" dir="ltr">
+      <select id="orderType" class="form-input" onchange="toggleDeliveryOptions()">
+        <option value="pickup">سفرة</option>
+        <option value="delivery">توصيل</option>
+      </select>
     </div>
-    <input id="custAddr" type="text" class="form-input" style="width:100%" placeholder="عنوانك 📍">
+    <div class="field-grid" id="phoneRow" style="margin-top:12px; display:none">
+      <input id="custPhone" type="tel"  class="form-input" placeholder="رقمك يا غالي" dir="ltr">
+      <select id="deliveryMethod" class="form-input" style="display:none">
+        <option value="standard">توصيل عادي</option>
+        <option value="express">توصيل سريع</option>
+        <option value="pickup_point">استلام من المطعم</option>
+      </select>
+    </div>
+    <input id="custAddr" type="text" class="form-input" style="width:100%; display:none" placeholder="عنوانك يا غالي 📍">
     <textarea id="custNotes" rows="2" class="form-area" style="width:100%" placeholder="ملاحظات للطلب... (اختياري)"></textarea>
     <div class="action-row">
       <button class="btn-clear-cart" onclick="clearCart()">🗑️ مسح الكل</button>
@@ -656,6 +667,8 @@ let dark     = localStorage.getItem('aseel_dark') === 'true';
    BOOT
    ================================================ */
 document.addEventListener('DOMContentLoaded', () => {
+  cart = [];
+  localStorage.removeItem('aseel_cart');
   if(dark) document.documentElement.classList.add('dark');
   syncDarkIcon();
   renderTabs();
@@ -664,6 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('skeletonGrid').style.display = 'none';
     document.getElementById('productsGrid').style.display = 'grid';
     renderProducts();
+    toggleDeliveryOptions();
     syncCartUI();
     observeAppear();
   }, 800);
@@ -799,11 +813,12 @@ const totalQty = ()=> cart.reduce((s,i)=>s+i.qty,0);
    CART UI SYNC
    ================================================ */
 function syncCartUI(){
-  const sub  = subtotal();
-  const qty  = totalQty();
-  const del  = cart.length ? DELIVERY_COST : 0;
-  const grand= sub+del;
-  const empty= !cart.length;
+  const sub       = subtotal();
+  const qty       = totalQty();
+  const orderType = document.getElementById('orderType')?.value || 'pickup';
+  const del       = orderType === 'delivery' && cart.length ? DELIVERY_COST : 0;
+  const grand     = sub + del;
+  const empty     = !cart.length;
 
   // Nav badge
   const nb = document.getElementById('navBadge');
@@ -817,7 +832,7 @@ function syncCartUI(){
 
   // Totals
   document.getElementById('subtotalEl').textContent=formatPrice(sub);
-  document.getElementById('deliveryEl').textContent=formatPrice(del);
+  document.getElementById('deliveryEl').textContent=orderType === 'delivery' ? formatPrice(del) : '0.000 ر.ع';
   document.getElementById('totalEl').textContent=formatPrice(grand);
   document.getElementById('cartCount').textContent=qty+' منتجات';
 
@@ -849,25 +864,54 @@ function renderCartItems(){
 function openCart(){ renderCartItems(); document.getElementById('cartSheet').classList.add('open'); document.getElementById('overlay').classList.add('show'); document.body.style.overflow='hidden'; }
 function closeCart(){ document.getElementById('cartSheet').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); document.body.style.overflow=''; }
 
+function toggleDeliveryOptions(){
+  const orderType = document.getElementById('orderType').value;
+  const phoneRow = document.getElementById('phoneRow');
+  const deliveryMethod = document.getElementById('deliveryMethod');
+  const addrField = document.getElementById('custAddr');
+  if(orderType === 'delivery'){
+    phoneRow.style.display = 'grid';
+    deliveryMethod.style.display = 'block';
+    addrField.style.display = 'block';
+  } else {
+    phoneRow.style.display = 'none';
+    deliveryMethod.style.display = 'none';
+    addrField.style.display = 'none';
+  }
+}
+
 /* ================================================
    WHATSAPP ORDER
    ================================================ */
 function sendWhatsApp(){
   const name  = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
+  const orderType = document.getElementById('orderType').value;
+  const deliveryMethod = document.getElementById('deliveryMethod').value;
   const addr  = document.getElementById('custAddr').value.trim();
   const notes = document.getElementById('custNotes').value.trim();
   if(!name)                          { toast('⚠️ من فضلك اكتب اسمك','error');  document.getElementById('custName').focus();  return; }
   const rawPhone = phone.replace(/\D/g,'');
-  if(rawPhone.length!==8 && !(rawPhone.length===11 && rawPhone.startsWith('968'))){ toast('⚠️ رقم الهاتف مش صح، أدخله بدون رمز الدولة','error'); document.getElementById('custPhone').focus(); return; }
-  const customerPhone = rawPhone.length===8 ? '+968' + rawPhone : '+' + rawPhone;
+  let customerPhone = '';
+  if(rawPhone){
+    if(rawPhone.length!==8 && !(rawPhone.length===11 && rawPhone.startsWith('968'))){ toast('⚠️ رقم الهاتف مش صح، أدخله بدون رمز الدولة','error'); document.getElementById('custPhone').focus(); return; }
+    customerPhone = rawPhone.length===8 ? '+968' + rawPhone : '+' + rawPhone;
+  } else if(orderType === 'delivery'){
+    toast('⚠️ من فضلك اكتب رقم الهاتف للتوصيل','error'); document.getElementById('custPhone').focus(); return;
+  }
+  if(orderType === 'delivery' && !addr){ toast('⚠️ من فضلك اكتب عنوان التوصيل','error'); document.getElementById('custAddr').focus(); return; }
   if(!cart.length)                   { toast('🛒 السلة فاضية','error'); return; }
-  const sub=subtotal(), del=DELIVERY_COST, grand=sub+del;
-  let m=`🌯 *طلب جديد من مطعم الأفندر المتميز*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${name}\n📱 *الهاتف:* ${customerPhone}\n`;
-  if(addr) m+=`📍 *العنوان:* ${addr}\n`;
+  const sub = subtotal();
+  const del = orderType === 'delivery' ? DELIVERY_COST : 0;
+  const grand = sub + del;
+  let m=`🌯 *طلب جديد من مطعم الأفندر المتميز*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${name}\n`;
+  if(customerPhone) m += `📱 *الهاتف:* ${customerPhone}\n`;
+  m += `📦 *نوع الطلب:* ${orderType==='delivery' ? 'توصيل' : 'سفرة'}\n`;
+  if(orderType === 'delivery'){ m+=`🚚 *طريقة التوصيل:* ${deliveryMethod === 'express' ? 'سريع' : deliveryMethod === 'pickup_point' ? 'استلام من المطعم' : 'عادي'}\n`; }
+  if(addr && orderType === 'delivery') m+=`📍 *العنوان:* ${addr}\n`;
   m+=`━━━━━━━━━━━━━━━━━━\n🧾 *تفاصيل الطلب:*\n`;
   cart.forEach(i=>{ m+=`${i.emoji} ${i.name} × ${i.qty} = ${formatPrice(i.price*i.qty)}\n`; });
-  m+=`━━━━━━━━━━━━━━━━━━\n💰 *المجموع:* ${formatPrice(sub)}\n🛵 *التوصيل:* ${formatPrice(del)}\n✅ *الإجمالي:* ${formatPrice(grand)}\n`;
+  m+=`━━━━━━━━━━━━━━━━━━\n💰 *المجموع:* ${formatPrice(sub)}\n🛵 *رسوم التوصيل:* ${orderType==='delivery' ? formatPrice(del) : '0.000 ر.ع'}\n✅ *الإجمالي:* ${formatPrice(grand)}\n`;
   if(notes) m+=`📝 *ملاحظات:* ${notes}\n`;
   m+=`\n🙏 شكراً لطلبك من مطعم الأفندر المتميز!`;  window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(m)}`,'_blank');
   toast('📲 جاري فتح واتساب...','success');
