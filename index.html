@@ -546,7 +546,7 @@ body {
     </div>
     <div class="field-grid">
       <input id="custName"  type="text" class="form-input" placeholder="اسمك 👤">
-      <input id="custPhone" type="tel"  class="form-input" placeholder="رقمك 📱" dir="ltr">
+      <input id="custPhone" type="tel"  class="form-input" placeholder="رقمك بدون رمز الدولة (يبدأ بـ4)" dir="ltr">
     </div>
     <input id="custAddr" type="text" class="form-input" style="width:100%" placeholder="عنوانك 📍">
     <textarea id="custNotes" rows="2" class="form-area" style="width:100%" placeholder="ملاحظات للطلب... (اختياري)"></textarea>
@@ -561,7 +561,7 @@ body {
 /* ================================================
    CONFIG
    ================================================ */
-const WA_PHONE         = '201001234567';
+const WA_PHONE         = '96899586567';
 const DELIVERY_COST    = 0.100;
 const formatPrice      = value => value.toFixed(3) + ' ر.ع';
 
@@ -858,10 +858,12 @@ function sendWhatsApp(){
   const addr  = document.getElementById('custAddr').value.trim();
   const notes = document.getElementById('custNotes').value.trim();
   if(!name)                          { toast('⚠️ من فضلك اكتب اسمك','error');  document.getElementById('custName').focus();  return; }
-  if(!phone||phone.replace(/\D/g,'').length<10){ toast('⚠️ رقم الهاتف مش صح','error'); document.getElementById('custPhone').focus(); return; }
+  const rawPhone = phone.replace(/\D/g,'');
+  if(rawPhone.length!==8 && !(rawPhone.length===11 && rawPhone.startsWith('968'))){ toast('⚠️ رقم الهاتف مش صح، أدخله بدون رمز الدولة','error'); document.getElementById('custPhone').focus(); return; }
+  const customerPhone = rawPhone.length===8 ? '+968' + rawPhone : '+' + rawPhone;
   if(!cart.length)                   { toast('🛒 السلة فاضية','error'); return; }
   const sub=subtotal(), del=DELIVERY_COST, grand=sub+del;
-  let m=`🌯 *طلب جديد من مطعم الأفندر المتميز*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${name}\n📱 *الهاتف:* ${phone}\n`;
+  let m=`🌯 *طلب جديد من مطعم الأفندر المتميز*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${name}\n📱 *الهاتف:* ${customerPhone}\n`;
   if(addr) m+=`📍 *العنوان:* ${addr}\n`;
   m+=`━━━━━━━━━━━━━━━━━━\n🧾 *تفاصيل الطلب:*\n`;
   cart.forEach(i=>{ m+=`${i.emoji} ${i.name} × ${i.qty} = ${formatPrice(i.price*i.qty)}\n`; });
