@@ -738,8 +738,11 @@ let featuredInterval;
    BOOT
    ================================================ */
 document.addEventListener('DOMContentLoaded', () => {
-  cart = [];
-  localStorage.removeItem('aseel_cart');
+  const savedCart = localStorage.getItem('aseel_cart');
+  if (savedCart) {
+    cart = JSON.parse(savedCart);
+  }
+
   if(dark) document.documentElement.classList.add('dark');
   syncDarkIcon();
   renderTabs();
