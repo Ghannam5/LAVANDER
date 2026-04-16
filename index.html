@@ -202,6 +202,14 @@ body {
 .hero-corner-top{top:10px;right:10px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3)}
 .hero-corner-bot{bottom:10px;left:10px;background:rgba(74,222,128,.75);color:#fff;border:1px solid rgba(74,222,128,.3)}
 
+.hero-featured-label{position:absolute;top:14px;right:14px;z-index:2;background:rgba(255,255,255,.14);color:#fff;padding:6px 12px;border-radius:9999px;font-size:12px;font-weight:700;backdrop-filter:blur(10px)}
+.hero-feature-card{position:relative;width:100%;height:100%;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:18px;gap:12px;box-shadow:0 28px 60px rgba(0,0,0,.2);}
+.hero-featured-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.85);transition:transform .4s;}
+.hero-feature-card:hover .hero-featured-img{transform:scale(1.04)}
+.hero-featured-meta{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;gap:8px}
+.hero-featured-name{font-weight:800;font-size:18px;color:#fff;line-height:1.1}
+.hero-featured-desc{font-size:13px;line-height:1.5;color:rgba(255,255,255,.85);max-height:52px;overflow:hidden;text-overflow:ellipsis}
+
 /* ================================================
    MAIN CONTENT
    ================================================ */
@@ -300,6 +308,51 @@ body {
 .qty-minus{background:rgba(139,26,26,.1);color:var(--crimson)}
 .qty-plus{background:var(--crimson);color:#fff}
 .qty-num{font-weight:700;font-size:15px;color:var(--text-1);min-width:20px;text-align:center}
+
+/* ================================================
+   FEATURED ITEM
+   ================================================ */
+.featured-wrap{margin-bottom:24px}
+.featured-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.featured-title{font-size:16px;font-weight:700;color:var(--text-1);margin:0}
+.featured-dots{display:flex;gap:6px}
+.featured-dot{width:8px;height:8px;border-radius:50%;background:rgba(139,26,26,.2);transition:background .3s}
+.featured-dot.active{background:var(--crimson)}
+
+.featured-card {
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:20px;
+  box-shadow:var(--card-shadow);
+  overflow:hidden;position:relative;
+  transition:transform .35s cubic-bezier(.34,1.2,.64,1),box-shadow .35s,border-color .3s;
+  opacity:0;transform:translateY(20px);
+}
+.featured-card.show{animation:fadeUp .48s ease forwards}
+.featured-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(212,160,23,.08),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.featured-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:var(--card-shadow-hover);border-color:rgba(212,160,23,.38)}
+.featured-card:hover::before{opacity:1}
+
+.featured-visual{height:200px;display:flex;align-items:flex-end;justify-content:flex-start;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(0,0,0,.04),rgba(0,0,0,.08));}
+.featured-visual::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.4) 100%);pointer-events:none}
+.featured-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s;filter:brightness(.92);}
+.featured-card:hover .featured-img{transform:scale(1.03)}
+.featured-badge{position:absolute;top:12px;right:12px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:9999px}
+.badge-featured{background:linear-gradient(135deg,#f4c430,#d4a017);color:#5a3500}
+
+.featured-body{padding:18px}
+.featured-title{font-weight:700;font-size:16px;line-height:1.3;color:var(--text-1);margin-bottom:6px}
+.featured-stars{display:flex;align-items:center;gap:4px;margin-bottom:9px}
+.featured-stars .stars{color:#f4c430;font-size:12px;letter-spacing:1px}
+.featured-stars .star-val{font-size:12px;font-weight:600;color:var(--text-3)}
+.featured-desc{font-size:13px;line-height:1.65;color:var(--text-3);margin-bottom:15px}
+.featured-footer{display:flex;align-items:center;justify-content:space-between}
+.featured-price{font-weight:900;font-size:20px;color:var(--crimson)}
+.featured-price span{font-size:11px;font-weight:500;margin-right:2px}
+
+.featured-btn-add{width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,var(--crimson),#c0392b);color:#fff;border:none;cursor:pointer;font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:var(--btn-shadow);transition:transform .2s,box-shadow .2s}
+.featured-btn-add:hover{transform:scale(1.12);box-shadow:0 6px 20px rgba(139,26,26,.4)}
+.featured-btn-add:active{transform:scale(.88)}
 
 /* ================================================
    SKELETON
@@ -478,10 +531,14 @@ body {
     </div>
     <div class="hero-visual appear">
       <div class="hero-visual-box">
-        <span class="hero-emoji-main">🥙</span>
-        <div class="hero-emoji-row"><span>🧆</span><span>🫘</span></div>
-        <span class="hero-corner-badge hero-corner-top">🔥 الأكتر طلباً</span>
-        <span class="hero-corner-badge hero-corner-bot">✓ طازج يومياً</span>
+        <div class="hero-featured-label">🔥 الأكتر طلباً</div>
+        <div class="hero-feature-card">
+          <img id="heroFeaturedImg" class="hero-featured-img" src="" alt="">
+          <div class="hero-featured-meta">
+            <div id="heroFeaturedName" class="hero-featured-name"></div>
+            <div id="heroFeaturedDesc" class="hero-featured-desc"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -497,6 +554,15 @@ body {
       oninput="onSearch()" autocomplete="off">
     <span class="search-icon">🔍</span>
     <button class="search-clear" id="clearBtn" onclick="clearSearch()" aria-label="مسح">✕</button>
+  </div>
+
+  <!-- Featured Item -->
+  <div class="featured-wrap appear">
+    <div class="featured-header">
+      <h2 class="featured-title">🔥 الأكثر طلباً اليوم</h2>
+      <div class="featured-dots" id="featuredDots"></div>
+    </div>
+    <div class="featured-card" id="featuredCard"></div>
   </div>
 
   <!-- Category Tabs -->
@@ -590,58 +656,58 @@ const CATEGORIES = [
 ];
 
 const PRODUCTS = [
-  {id:1, cat:'sand',    name:'سندوتش فلافل لبناني',           desc:'فلافل لبناني طازج مع طحينة وعيش طازج',                             price:0.300, emoji:'🧆', badge:'popular', stars:4.8, time:'5 د'},
-  {id:2, cat:'sand',    name:'سندوتش فلافل مصري',            desc:'فلافل مصرية مقرمشة مع سلطة طازجة',                                price:0.300, emoji:'🧆', badge:null,      stars:4.6, time:'5 د'},
-  {id:3, cat:'sand',    name:'سندوتش فلافل بالجبنة',         desc:'فلافل مع جبنة مذابة ولمسة طحينة',                                   price:0.400, emoji:'🧀', badge:'new',       stars:4.7, time:'6 د'},
-  {id:4, cat:'sand',    name:'سندوتش فلافل بالباذنجان',       desc:'فلافل مع باذنجان مقلي وصلصة خاصة',                                  price:0.400, emoji:'🍆', badge:null,      stars:4.6, time:'6 د'},
-  {id:5, cat:'sand',    name:'سندوتش فول فلافل',             desc:'توليفة فول وفلافل في سندوتش واحد',                                 price:0.400, emoji:'🥪', badge:'popular', stars:4.8, time:'6 د'},
-  {id:6, cat:'sand',    name:'سندوتش فول مصري',              desc:'فول بالطماطم والزيت الحار في عيش طازج',                              price:0.300, emoji:'🫘', badge:null,      stars:4.5, time:'5 د'},
-  {id:7, cat:'sand',    name:'سندوتش فول بالبيض',            desc:'فول كريمي مع بيض مسلوق وتتبيلة خاصة',                                price:0.400, emoji:'🥚', badge:null,      stars:4.6, time:'5 د'},
-  {id:8, cat:'sand',    name:'سندوتش فول بالصلصة',           desc:'فول مع صلصة حارة وخبز طازج',                                        price:0.400, emoji:'🍅', badge:'spicy',     stars:4.5, time:'5 د'},
-  {id:9, cat:'sand',    name:'سندوتش بيض جبن',               desc:'بيض مقلي وجبنة طازجة وخضار',                                       price:0.400, emoji:'🍳', badge:null,      stars:4.4, time:'5 د'},
-  {id:10,cat:'sand',    name:'سندوتش بيض شكشوكة',           desc:'بيض شكشوكة مع طماطم وفلفل حار',                                     price:0.300, emoji:'🍳', badge:'spicy',     stars:4.6, time:'5 د'},
-  {id:11,cat:'sand',    name:'سندوتش بيض أوملت',             desc:'أوملت خفيف مع توابل خاصة وخضار',                                     price:0.300, emoji:'🥚', badge:null,      stars:4.5, time:'5 د'},
-  {id:12,cat:'sand',    name:'سندوتش نقانق',                 desc:'نقانق مشوية مع صلصة خاصة وخبز طازج',                                price:0.300, emoji:'🌭', badge:null,      stars:4.4, time:'5 د'},
-  {id:13,cat:'sand',    name:'سندوتش بطاطس',                desc:'بطاطس محمرة مع صوص الثومية والبهارات',                              price:0.300, emoji:'🍟', badge:null,      stars:4.3, time:'5 د'},
-  {id:14,cat:'saruakh', name:'صاروخ فلافل',                 desc:'صاروخ فلافل مقرمشة مع طحينة وصلصة',                               price:0.500, emoji:'🚀', badge:'popular', stars:4.8, time:'7 د'},
-  {id:15,cat:'saruakh', name:'صاروخ مشكل',                  desc:'صاروخ فول وفلافل وكبدة مع التتبيلة الخاصة',                         price:0.500, emoji:'🍢', badge:null,      stars:4.7, time:'7 د'},
-  {id:16,cat:'saruakh', name:'صاروخ قنبلة',                 desc:'صاروخ كامل مع إضافات مميزة وحار',                                  price:0.600, emoji:'💣', badge:'spicy',     stars:4.8, time:'8 د'},
-  {id:17,cat:'saruakh', name:'صاروخ شاورما',               desc:'صاروخ شاورما دجاج أو لحم مع خضار وصلصة',                          price:0.700, emoji:'🌯', badge:'popular', stars:4.9, time:'10 د'},
-  {id:18,cat:'saruakh', name:'صاروخ شاورما مكسيكي',         desc:'شاورما مع صلصة مكسيكية حارة وجبن',                                 price:0.800, emoji:'🌶️', badge:'spicy',     stars:4.7, time:'10 د'},
-  {id:19,cat:'saruakh', name:'صاروخ شاورما اسكندر',         desc:'شاورما اسكندراني بطعم أصيل',                                       price:1.000, emoji:'🥙', badge:'new',       stars:4.8, time:'12 د'},
-  {id:20,cat:'saruakh', name:'صاروخ شاورما كبدة مكس',       desc:'شاورما وكبدة مع توابل تركية لذيذة',                                price:0.800, emoji:'🥓', badge:null,      stars:4.7, time:'11 د'},
-  {id:21,cat:'saruakh', name:'صاروخ كبدة',                 desc:'صاروخ كبدة طازجة مع قلي ممتاز وتوابل',                             price:0.800, emoji:'🥓', badge:null,      stars:4.6, time:'10 د'},
-  {id:22,cat:'shawarma',name:'سندوتش شاورما لبناني',        desc:'شاورما لبنانية مميزة مع صلصة طحينة',                              price:0.300, emoji:'🌯', badge:'popular', stars:4.8, time:'8 د'},
-  {id:23,cat:'shawarma',name:'سندوتش شاورما مصري',         desc:'شاورما مصرية مع الثومية والبطاطس',                                 price:0.500, emoji:'🌯', badge:null,      stars:4.7, time:'9 د'},
-  {id:24,cat:'shawarma',name:'سندوتش مكس مصري',            desc:'شاورما مكس مع صلصة خاصة وخضار',                                   price:0.500, emoji:'🌯', badge:null,      stars:4.7, time:'9 د'},
-  {id:25,cat:'shawarma',name:'سندوتش كبدة اسكندراني',       desc:'كبدة اسكندراني طازجة مع بصل وزعتر',                                price:0.500, emoji:'🥓', badge:null,      stars:4.6, time:'8 د'},
-  {id:26,cat:'shawarma',name:'كريب شاورما',                 desc:'كريب شاورما غني بالدجاج والخضار',                                  price:1.500, emoji:'🥙', badge:'popular', stars:4.9, time:'12 د'},
-  {id:27,cat:'shawarma',name:'كريب كبدة',                   desc:'كريب كبدة لذيذ مع تتبيلة خاصة',                                   price:1.500, emoji:'🥓', badge:null,      stars:4.7, time:'12 د'},
-  {id:28,cat:'shawarma',name:'كريب زنجر',                   desc:'كريب زنجر مع جبن وخس وصلصة',                                       price:1.500, emoji:'🍗', badge:null,      stars:4.7, time:'12 د'},
-  {id:29,cat:'shawarma',name:'كريب نقانق',                  desc:'كريب نقانق سبرينج حار مع صوص',                                      price:1.500, emoji:'🌭', badge:null,      stars:4.6, time:'12 د'},
-  {id:30,cat:'shawarma',name:'كريب برجر',                   desc:'كريب برجر جامبو مع جبنة وصلصة',                                   price:1.500, emoji:'🍔', badge:'new',       stars:4.8, time:'13 د'},
-  {id:31,cat:'shawarma',name:'كريب نوابا',                  desc:'كريب نوابا مشكل مع بطاطس ومخللات',                                price:1.500, emoji:'🧆', badge:null,      stars:4.7, time:'13 د'},
-  {id:32,cat:'plates',  name:'صحن مشكل (فول، فلافل، كبدة، شاورما، ثومية، خبز مصري)', desc:'صحن مشكل غني ومناسب للواحدة',               price:1.500, emoji:'🍽️', badge:'popular', stars:4.8, time:'15 د'},
-  {id:33,cat:'plates',  name:'صحن فول',                    desc:'فول سادة بطعم مصري تقليدي',                                      price:0.600, emoji:'🫘', badge:null,      stars:4.6, time:'10 د'},
-  {id:34,cat:'plates',  name:'صحن فلافل',                  desc:'فلافل مقرمشة مع سلطة طازجة',                                     price:0.500, emoji:'🧆', badge:null,      stars:4.7, time:'10 د'},
-  {id:35,cat:'plates',  name:'صحن فول اسكندراني',          desc:'فول اسكندراني مخصوص مع الكزبرة',                                  price:0.700, emoji:'🫘', badge:null,      stars:4.7, time:'10 د'},
-  {id:36,cat:'plates',  name:'صحن فول بالبيض',            desc:'فول مع بيض وسلطة طازجة',                                         price:0.700, emoji:'🥚', badge:null,      stars:4.6, time:'10 د'},
-  {id:37,cat:'plates',  name:'صحن مسقعة باذنجان',          desc:'مسقعة باذنجان مع صلصة طماطم خاصة',                               price:0.500, emoji:'🍆', badge:null,      stars:4.6, time:'12 د'},
-  {id:38,cat:'plates',  name:'صحن شكشوكة',                desc:'شكشوكة بيض بالطماطم والفلفل',                                    price:0.500, emoji:'🍳', badge:null,      stars:4.5, time:'10 د'},
-  {id:39,cat:'plates',  name:'صحن شاورما صغير',           desc:'شاورما صغير مع خبز وسلطة',                                       price:1.500, emoji:'🌯', badge:null,      stars:4.7, time:'14 د'},
-  {id:40,cat:'plates',  name:'صحن شاورما وسط',             desc:'شاورما وسط مع بطاطس وسلطة',                                     price:2.000, emoji:'🌯', badge:null,      stars:4.8, time:'16 د'},
-  {id:41,cat:'plates',  name:'صحن شاورما عائلي',          desc:'شاورما عائلي يكفي العائلة',                                        price:3.000, emoji:'🌯', badge:'popular', stars:4.9, time:'18 د'},
-  {id:42,cat:'plates',  name:'صحن كبدة اسكندراني',         desc:'كبدة اسكندراني مع بصل وزعتر',                                    price:1.500, emoji:'🥓', badge:null,      stars:4.7, time:'15 د'},
-  {id:43,cat:'plates',  name:'صحن مكس',                    desc:'صحن مكس فول وفلافل وكبدة',                                       price:1.500, emoji:'🍛', badge:null,      stars:4.8, time:'15 د'},
-  {id:44,cat:'meals',   name:'وجبة شاورما عربي مقطع',      desc:'وجبة شاورما عربي مع خبز وصلصة',                                 price:1.500, emoji:'🥙', badge:'popular', stars:4.8, time:'18 د'},
+  {id:1, cat:'sand',    name:'سندوتش فلافل لبناني',           desc:'فلافل لبناني طازج مع طحينة وعيش طازج',                             price:0.300, emoji:'🧆', badge:'popular', stars:4.8, time:'5 د', image:'./سندوتش فلافل لبناني.jpeg'},
+  {id:2, cat:'sand',    name:'سندوتش فلافل مصري',            desc:'فلافل مصرية مقرمشة مع سلطة طازجة',                                price:0.300, emoji:'🧆', badge:null,      stars:4.6, time:'5 د', image:'./img/سندوتش فلافل مصري 2.jpeg'},
+  {id:3, cat:'sand',    name:'سندوتش فلافل بالجبنة',         desc:'فلافل مع جبنة مذابة ولمسة طحينة',                                   price:0.400, emoji:'🧀', badge:'new',       stars:4.7, time:'6 د', image:'./سندوتش فلافل لبناني2.jpeg'},
+  {id:4, cat:'sand',    name:'سندوتش فلافل بالباذنجان',       desc:'فلافل مع باذنجان مقلي وصلصة خاصة',                                  price:0.400, emoji:'🍆', badge:null,      stars:4.6, time:'6 د', image:'./سندوتش فلافل بالباذنجان.jpeg'},
+  {id:5, cat:'sand',    name:'سندوتش فول فلافل',             desc:'توليفة فول وفلافل في سندوتش واحد',                                 price:0.400, emoji:'🥪', badge:'popular', stars:4.8, time:'6 د', image:'./img/سندوتش فول فلافل.jpeg'},
+  {id:6, cat:'sand',    name:'سندوتش فول مصري',              desc:'فول بالطماطم والزيت الحار في عيش طازج',                              price:0.300, emoji:'🫘', badge:null,      stars:4.5, time:'5 د', image:'./سندوتش فول.jpeg'},
+  {id:7, cat:'sand',    name:'سندوتش فول بالبيض',            desc:'فول كريمي مع بيض مسلوق وتتبيلة خاصة',                                price:0.400, emoji:'🥚', badge:null,      stars:4.6, time:'5 د', image:'./img/فول بالبيض.jpeg'},
+  {id:8, cat:'sand',    name:'سندوتش فول بالصلصة',           desc:'فول مع صلصة حارة وخبز طازج',                                        price:0.400, emoji:'🍅', badge:'spicy',     stars:4.5, time:'5 د', image:'./سندوتش فول.jpeg'},
+  {id:9, cat:'sand',    name:'سندوتش بيض جبن',               desc:'بيض مقلي وجبنة طازجة وخضار',                                       price:0.400, emoji:'🍳', badge:null,      stars:4.4, time:'5 د', image:'./سندوتش فول.jpeg'},
+  {id:10,cat:'sand',    name:'سندوتش بيض شكشوكة',           desc:'بيض شكشوكة مع طماطم وفلفل حار',                                     price:0.300, emoji:'🍳', badge:'spicy',     stars:4.6, time:'5 د', image:'./صحن شكشوكة.jpeg'},
+  {id:11,cat:'sand',    name:'سندوتش بيض أوملت',             desc:'أوملت خفيف مع توابل خاصة وخضار',                                     price:0.300, emoji:'🥚', badge:null,      stars:4.5, time:'5 د', image:'./سندوتش فول.jpeg'},
+  {id:12,cat:'sand',    name:'سندوتش نقانق',                 desc:'نقانق مشوية مع صلصة خاصة وخبز طازج',                                price:0.300, emoji:'🌭', badge:null,      stars:4.4, time:'5 د', image:'./سندوتش نقانق (هوت دوج).jpeg'},
+  {id:13,cat:'sand',    name:'سندوتش بطاطس',                desc:'بطاطس محمرة مع صوص الثومية والبهارات',                              price:0.300, emoji:'🍟', badge:null,      stars:4.3, time:'5 د', image:'./سندوتش فول.jpeg'},
+  {id:14,cat:'saruakh', name:'صاروخ فلافل',                 desc:'صاروخ فلافل مقرمشة مع طحينة وصلصة',                               price:0.500, emoji:'🚀', badge:'popular', stars:4.8, time:'7 د', image:'./img/صاروخ فلافل.jpeg'},
+  {id:15,cat:'saruakh', name:'صاروخ مشكل',                  desc:'صاروخ فول وفلافل وكبدة مع التتبيلة الخاصة',                         price:0.500, emoji:'🍢', badge:null,      stars:4.7, time:'7 د', image:'./صحن مشكل (ميكس).jpeg'},
+  {id:16,cat:'saruakh', name:'صاروخ قنبلة',                 desc:'صاروخ كامل مع إضافات مميزة وحار',                                  price:0.600, emoji:'💣', badge:'spicy',     stars:4.8, time:'8 د', image:'./صاروخ شاورما.jpeg'},
+  {id:17,cat:'saruakh', name:'صاروخ شاورما',               desc:'صاروخ شاورما دجاج أو لحم مع خضار وصلصة',                          price:0.700, emoji:'🌯', badge:'popular', stars:4.9, time:'10 د', image:'./صاروخ شاورما.jpeg'},
+  {id:18,cat:'saruakh', name:'صاروخ شاورما مكسيكي',         desc:'شاورما مع صلصة مكسيكية حارة وجبن',                                 price:0.800, emoji:'🌶️', badge:'spicy',     stars:4.7, time:'10 د', image:'./صاروخ شاورما.jpeg'},
+  {id:19,cat:'saruakh', name:'صاروخ شاورما اسكندر',         desc:'شاورما اسكندراني بطعم أصيل',                                       price:1.000, emoji:'🥙', badge:'new',       stars:4.8, time:'12 د', image:'./صاروخ شاورما.jpeg'},
+  {id:20,cat:'saruakh', name:'صاروخ شاورما كبدة مكس',       desc:'شاورما وكبدة مع توابل تركية لذيذة',                                price:0.800, emoji:'🥓', badge:null,      stars:4.7, time:'11 د', image:'./صاروخ شاورما.jpeg'},
+  {id:21,cat:'saruakh', name:'صاروخ كبدة',                 desc:'صاروخ كبدة طازجة مع قلي ممتاز وتوابل',                             price:0.800, emoji:'🥓', badge:null,      stars:4.6, time:'10 د', image:'./صاروخ شاورما.jpeg'},
+  {id:22,cat:'shawarma',name:'سندوتش شاورما لبناني',        desc:'شاورما لبنانية مميزة مع صلصة طحينة',                              price:0.300, emoji:'🌯', badge:'popular', stars:4.8, time:'8 د', image:'./سندوتش شاورما لبناني.jpeg'},
+  {id:23,cat:'shawarma',name:'سندوتش شاورما مصري',         desc:'شاورما مصرية مع الثومية والبطاطس',                                 price:0.500, emoji:'🌯', badge:null,      stars:4.7, time:'9 د', image:'./سندوتش شاورما لبناني2.jpeg'},
+  {id:24,cat:'shawarma',name:'سندوتش مكس مصري',            desc:'شاورما مكس مع صلصة خاصة وخضار',                                   price:0.500, emoji:'🌯', badge:null,      stars:4.7, time:'9 د', image:'./سندوتش شاورما لبناني.jpeg'},
+  {id:25,cat:'shawarma',name:'سندوتش كبدة اسكندراني',       desc:'كبدة اسكندراني طازجة مع بصل وزعتر',                                price:0.500, emoji:'🥓', badge:null,      stars:4.6, time:'8 د', image:'./صحن كبدة صغير.jpeg'},
+  {id:26,cat:'shawarma',name:'كريب شاورما',                 desc:'كريب شاورما غني بالدجاج والخضار',                                  price:1.500, emoji:'🥙', badge:'popular', stars:4.9, time:'12 د', image:'./سندوتش شاورما لبناني2.jpeg'},
+  {id:27,cat:'shawarma',name:'كريب كبدة',                   desc:'كريب كبدة لذيذ مع تتبيلة خاصة',                                   price:1.500, emoji:'🥓', badge:null,      stars:4.7, time:'12 د', image:'./صحن كبدة صغير.jpeg'},
+  {id:28,cat:'shawarma',name:'كريب زنجر',                   desc:'كريب زنجر مع جبن وخس وصلصة',                                       price:1.500, emoji:'🍗', badge:null,      stars:4.7, time:'12 د', image:'./سندوتش شاورما لبناني.jpeg'},
+  {id:29,cat:'shawarma',name:'كريب نقانق',                  desc:'كريب نقانق سبرينج حار مع صوص',                                      price:1.500, emoji:'🌭', badge:null,      stars:4.6, time:'12 د', image:'./سندوتش نقانق (هوت دوج).jpeg'},
+  {id:30,cat:'shawarma',name:'كريب برجر',                   desc:'كريب برجر جامبو مع جبنة وصلصة',                                   price:1.500, emoji:'🍔', badge:'new',       stars:4.8, time:'13 د', image:'./برجر.jpeg'},
+  {id:31,cat:'shawarma',name:'كريب نوابا',                  desc:'كريب نوابا مشكل مع بطاطس ومخللات',                                price:1.500, emoji:'🧆', badge:null,      stars:4.7, time:'13 د', image:'./صحن مشكل (ميكس).jpeg'},
+  {id:32,cat:'plates',  name:'صحن مشكل (فول، فلافل، كبدة، شاورما، ثومية، خبز مصري)', desc:'صحن مشكل غني ومناسب للواحدة',               price:1.500, emoji:'🍽️', badge:'popular', stars:4.8, time:'15 د', image:'./صحن مشكل (ميكس).jpeg'},
+  {id:33,cat:'plates',  name:'صحن فول',                    desc:'فول سادة بطعم مصري تقليدي',                                      price:0.600, emoji:'🫘', badge:null,      stars:4.6, time:'10 د', image:'./صحن فول.jpeg'},
+  {id:34,cat:'plates',  name:'صحن فلافل',                  desc:'فلافل مقرمشة مع سلطة طازجة',                                     price:0.500, emoji:'🧆', badge:null,      stars:4.7, time:'10 د', image:'./صحن فلافل.jpeg'},
+  {id:35,cat:'plates',  name:'صحن فول اسكندراني',          desc:'فول اسكندراني مخصوص مع الكزبرة',                                  price:0.700, emoji:'🫘', badge:null,      stars:4.7, time:'10 د', image:'./صحن فول.jpeg'},
+  {id:36,cat:'plates',  name:'صحن فول بالبيض',            desc:'فول مع بيض وسلطة طازجة',                                         price:0.700, emoji:'🥚', badge:null,      stars:4.6, time:'10 د', image:'./img/فول بالبيض.jpeg'},
+  {id:37,cat:'plates',  name:'صحن مسقعة باذنجان',          desc:'مسقعة باذنجان مع صلصة طماطم خاصة',                               price:0.500, emoji:'🍆', badge:null,      stars:4.6, time:'12 د', image:'./صحن مسقعة.jpeg'},
+  {id:38,cat:'plates',  name:'صحن شكشوكة',                desc:'شكشوكة بيض بالطماطم والفلفل',                                    price:0.500, emoji:'🍳', badge:null,      stars:4.5, time:'10 د', image:'./صحن شكشوكة.jpeg'},
+  {id:39,cat:'plates',  name:'صحن شاورما صغير',           desc:'شاورما صغير مع خبز وسلطة',                                       price:1.500, emoji:'🌯', badge:null,      stars:4.7, time:'14 د', image:'./img/صحن شاورما.jpeg'},
+  {id:40,cat:'plates',  name:'صحن شاورما وسط',             desc:'شاورما وسط مع بطاطس وسلطة',                                     price:2.000, emoji:'🌯', badge:null,      stars:4.8, time:'16 د', image:'./img/صحن شاورما 2.jpeg'},
+  {id:41,cat:'plates',  name:'صحن شاورما عائلي',          desc:'شاورما عائلي يكفي العائلة',                                        price:3.000, emoji:'🌯', badge:'popular', stars:4.9, time:'18 د', image:'./img/صحن شاورما.jpeg'},
+  {id:42,cat:'plates',  name:'صحن كبدة اسكندراني',         desc:'كبدة اسكندراني مع بصل وزعتر',                                    price:1.500, emoji:'🥓', badge:null,      stars:4.7, time:'15 د', image:'./img/صحن كبدة 2.jpeg'},
+  {id:43,cat:'plates',  name:'صحن مكس',                    desc:'صحن مكس فول وفلافل وكبدة',                                       price:1.500, emoji:'🍛', badge:null,      stars:4.8, time:'15 د', image:'./صحن مشكل (ميكس).jpeg'},
+  {id:44,cat:'meals',   name:'وجبة شاورما عربي مقطع',      desc:'وجبة شاورما عربي مع خبز وصلصة',                                 price:1.500, emoji:'🥙', badge:'popular', stars:4.8, time:'18 د', image:'./وجبة عربي.jpeg'},
   {id:45,cat:'meals',   name:'وجبة دلع كرشك',              desc:'وجبة مليانة لحم وفلافل مع الأرز',                                price:2.000, emoji:'🍖', badge:'new',       stars:4.7, time:'20 د'},
-  {id:46,cat:'meals',   name:'وجبة برجر جامبو',            desc:'برجر جامبو مع بطاطس وصلصة خاصة',                                price:1.300, emoji:'🍔', badge:null,      stars:4.8, time:'12 د'},
-  {id:47,cat:'meals',   name:'سندوتش برجر جامبو',         desc:'سندوتش برجر جامبو لذيذ مع جبنة',                                  price:1.000, emoji:'🍔', badge:null,      stars:4.6, time:'10 د'},
-  {id:48,cat:'drinks',  name:'مانجو / فراولة / برتقال / كوكتيل', desc:'عصائر طازجة بنكهات متعددة',                                    price:0.700, emoji:'🥭', badge:'popular', stars:4.8, time:'5 د'},
-  {id:49,cat:'drinks',  name:'ليمون نعناع / موز حليب',     desc:'مشروبات باردة ومنعشة',                                           price:0.600, emoji:'🍋', badge:null,      stars:4.7, time:'5 د'},
-  {id:50,cat:'drinks',  name:'تانج / فيمتو / نسكافيه / بيبسي', desc:'مشروب فوار أو قهوة سريعة',                                     price:0.300, emoji:'🥤', badge:null,      stars:4.5, time:'2 د'},
-  {id:51,cat:'drinks',  name:'شاي كشري / إحساس / حلبة',   desc:'شاي ساخن بنكهات مصرية أصيلة',                                    price:0.200, emoji:'☕', badge:null,      stars:4.6, time:'3 د'},
-  {id:52,cat:'drinks',  name:'سانتوب / ماء صغير',         desc:'مياه بطعم خفيف أو ماء صغير',                                    price:0.100, emoji:'💧', badge:null,      stars:4.4, time:'1 د'},
+  {id:46,cat:'meals',   name:'وجبة برجر جامبو',            desc:'برجر جامبو مع بطاطس وصلصة خاصة',                                price:1.300, emoji:'🍔', badge:null,      stars:4.8, time:'12 د', image:'./برجر.jpeg'},
+  {id:47,cat:'meals',   name:'سندوتش برجر جامبو',         desc:'سندوتش برجر جامبو لذيذ مع جبنة',                                  price:1.000, emoji:'🍔', badge:null,      stars:4.6, time:'10 د', image:'./برجر.jpeg'},
+  {id:48,cat:'drinks',  name:'مانجو / فراولة / برتقال / كوكتيل', desc:'عصائر طازجة بنكهات متعددة',                                    price:0.700, emoji:'🥭', badge:'popular', stars:4.8, time:'5 د', image:'./img/مانجو  فراولة  برتقال  كوكتيل.jpeg'},
+  {id:49,cat:'drinks',  name:'ليمون نعناع / موز حليب',     desc:'مشروبات باردة ومنعشة',                                           price:0.600, emoji:'🍋', badge:null,      stars:4.7, time:'5 د', image:'./img/موز بحليب - ليمون نعناع.jpeg'},
+  {id:50,cat:'drinks',  name:'تانج / فيمتو / نسكافيه / بيبسي', desc:'مشروب فوار أو قهوة سريعة',                                     price:0.300, emoji:'🥤', badge:null,      stars:4.5, time:'2 د', image:'./img/تانج  فيمتو  نسكافيه  بيبسي.jpeg'},
+  {id:51,cat:'drinks',  name:'شاي كشري / إحساس / حلبة',   desc:'شاي ساخن بنكهات مصرية أصيلة',                                    price:0.200, emoji:'☕', badge:null,      stars:4.6, time:'3 د', image:'./img/شاي كشري.jpeg'},
+  {id:52,cat:'drinks',  name:'سانتوب / ماء صغير',         desc:'مياه بطعم خفيف أو ماء صغير',                                    price:0.100, emoji:'💧', badge:null,      stars:4.4, time:'1 د', image:'./img/مياه صغيرة.jpeg'},
 ];
 
 const IMAGE_MAP = {
@@ -663,6 +729,11 @@ let activeCat= 'all';
 let query    = '';
 let dark     = localStorage.getItem('aseel_dark') === 'true';
 
+// Featured items rotation
+let featuredItems = [32, 25, 23, 2]; // IDs: صحن الميكس, سندوتش الكبدة, الشاورما المصري, الفلافل المصري
+let currentFeaturedIndex = 0;
+let featuredInterval;
+
 /* ================================================
    BOOT
    ================================================ */
@@ -683,7 +754,89 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 800);
   setupScroll();
   observeAppear();
+  initFeaturedRotation();
 });
+
+/* ================================================
+   FEATURED ROTATION
+   ================================================ */
+function initFeaturedRotation(){
+  renderFeaturedItem();
+  renderFeaturedDots();
+  renderHeroFeatured();
+  startFeaturedRotation();
+}
+
+function renderFeaturedItem(){
+  const itemId = featuredItems[currentFeaturedIndex];
+  const item = PRODUCTS.find(p => p.id === itemId);
+  if(!item) return;
+  const image = item.image || IMAGE_MAP[item.cat] || '';
+  document.getElementById('featuredCard').innerHTML = `
+    <div class="featured-visual">
+      <img class="featured-img" src="${image}" alt="${item.name}">
+      <span class="featured-badge badge-featured">🔥 الأكثر طلباً</span>
+    </div>
+    <div class="featured-body">
+      <h3 class="featured-title">${item.name}</h3>
+      <div class="featured-stars">
+        <span class="stars">★★★★★</span>
+        <span class="star-val">${item.stars}</span>
+      </div>
+      <p class="featured-desc">${item.desc}</p>
+      <div class="featured-footer">
+        <div class="featured-price">${formatPrice(item.price)}</div>
+        <button class="featured-btn-add" onclick="addItem(${item.id})" aria-label="إضافة للسلة">+</button>
+      </div>
+    </div>`;
+  document.getElementById('featuredCard').classList.add('show');
+  renderHeroFeatured();
+}
+
+function renderHeroFeatured(){
+  const itemId = featuredItems[currentFeaturedIndex];
+  const item = PRODUCTS.find(p => p.id === itemId);
+  if(!item) return;
+  const image = item.image || IMAGE_MAP[item.cat] || '';
+  const imgEl = document.getElementById('heroFeaturedImg');
+  const nameEl = document.getElementById('heroFeaturedName');
+  const descEl = document.getElementById('heroFeaturedDesc');
+  imgEl.src = image;
+  imgEl.alt = item.name;
+  nameEl.textContent = item.name;
+  descEl.textContent = item.desc;
+}
+
+function renderFeaturedDots(){
+  const dotsContainer = document.getElementById('featuredDots');
+  dotsContainer.innerHTML = featuredItems.map((_, index) =>
+    `<div class="featured-dot ${index === currentFeaturedIndex ? 'active' : ''}" onclick="setFeaturedItem(${index})"></div>`
+  ).join('');
+}
+
+function setFeaturedItem(index){
+  if(index === currentFeaturedIndex) return;
+  currentFeaturedIndex = index;
+  renderFeaturedDots();
+  renderFeaturedItem();
+}
+
+function nextFeaturedItem(){
+  currentFeaturedIndex = (currentFeaturedIndex + 1) % featuredItems.length;
+  renderFeaturedDots();
+  renderFeaturedItem();
+}
+
+function startFeaturedRotation(){
+  featuredInterval = setInterval(nextFeaturedItem, 5000);
+}
+
+function stopFeaturedRotation(){
+  if(featuredInterval){
+    clearInterval(featuredInterval);
+    featuredInterval = null;
+  }
+}
 
 /* ================================================
    DARK MODE
@@ -765,9 +918,7 @@ function renderProducts(){
       <article class="product-card appear" data-delay="${i*55}" style="animation-delay:${i*55}ms">
         <div class="card-visual">
           <img class="card-img" src="${image}" alt="${p.name}">
-          <span class="card-emoji">${p.emoji}</span>
           ${badgeHtml}
-          <span class="card-time">⏱ ${p.time}</span>
         </div>
         <div class="card-body">
           <h3 class="card-title">${p.name}</h3>
@@ -845,7 +996,6 @@ function syncCartUI(){
 function renderCartItems(){
   document.getElementById('cartItems').innerHTML = cart.map(item=>`
     <div class="cart-item">
-      <span class="cart-item-emoji">${item.emoji}</span>
       <div class="cart-item-info">
         <div class="cart-item-name">${item.name}</div>
         <div class="cart-item-price">${formatPrice(item.price*item.qty)}</div>
