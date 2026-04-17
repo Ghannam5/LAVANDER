@@ -622,7 +622,7 @@ body {
   <div id="cartFooter" class="hidden">
     <div class="totals-card">
       <div class="total-row"><span>المجموع الجزئي</span><span id="subtotalEl">0.000 ر.ع</span></div>
-      <div class="total-row"><span>رسوم التوصيل</span><span id="deliveryEl">0.100 ر.ع</span></div>
+      <div class="total-row"><span>رسوم التوصيل</span><span id="deliveryEl">0.500 ر.ع</span></div>
       <div class="total-row grand"><span>الإجمالي</span><span id="totalEl">0.000 ر.ع</span></div>
     </div>
     <div class="field-grid">
@@ -1097,6 +1097,7 @@ function toggleDeliveryOptions(){
     deliveryMethod.style.display = 'block';
     locationSection.style.display = 'none';
   }
+  syncCartUI(); // تحديث الرسوم والإجمالي
 }
 
 /* ================================================
