@@ -818,11 +818,6 @@ function renderFeaturedItem(){
     </div>
     <div class="featured-body">
       <h3 class="featured-title">${item.name}</h3>
-      <div class="featured-stars">
-        <span class="stars">★★★★★</span>
-        <span class="star-val">${item.stars}</span>
-      </div>
-      <p class="featured-desc">${item.desc}</p>
       <div class="featured-footer">
         <div class="featured-price">${formatPrice(item.price)}</div>
         <button class="featured-btn-add" onclick="addItem(${item.id})" aria-label="إضافة للسلة">+</button>
