@@ -535,9 +535,9 @@ body {
       <div class="hero-stats">
         <div class="hero-stat"><span class="hero-stat-val">4.9★</span><span class="hero-stat-lbl">تقييم العملاء</span></div>
         <div class="hero-sep"></div>
-        <div class="hero-stat"><span class="hero-stat-val">+2000</span><span class="hero-stat-lbl">طلب يومي</span></div>
+        <div class="hero-stat"><span class="hero-stat-val">+450</span><span class="hero-stat-lbl">طلب يومي</span></div>
         <div class="hero-sep"></div>
-        <div class="hero-stat"><span class="hero-stat-val">15+</span><span class="hero-stat-lbl">سنة خبرة</span></div>
+        <div class="hero-stat"><span class="hero-stat-val">25+</span><span class="hero-stat-lbl">سنة خبرة</span></div>
       </div>
       <button class="btn-cta" onclick="document.getElementById('menuAnchor').scrollIntoView({behavior:'smooth'})">
         اطلب دلوقتي
@@ -628,15 +628,14 @@ body {
     <div class="field-grid">
       <input id="custName"  type="text" class="form-input" placeholder="اسمك 👤">
       <select id="orderType" class="form-input" onchange="toggleDeliveryOptions()">
-        <option value="pickup">سفرة</option>
+        <option value="pickup">سفرة / استلام من المطعم</option>
         <option value="delivery">توصيل</option>
       </select>
     </div>
     <div class="field-grid" id="phoneRow" style="margin-top:12px; display:none">
       <input id="custPhone" type="tel"  class="form-input" placeholder="رقمك يا غالي" dir="ltr">
-      <select id="deliveryMethod" class="form-input" style="display:none">
+      <select id="deliveryMethod" class="form-input">
         <option value="standard">توصيل</option>
-        <option value="pickup_point">استلام من المطعم</option>
       </select>
     </div>
     <input id="custAddr" type="text" class="form-input" style="width:100%; display:none" placeholder="عنوانك يا غالي 📍">
@@ -661,7 +660,7 @@ body {
    CONFIG
    ================================================ */
 const WA_PHONE         = '96899586567';
-const DELIVERY_COST    = 0.000;
+const DELIVERY_COST    = 0.500;
 const formatPrice      = value => value.toFixed(3) + ' ر.ع';
 
 /* ================================================
@@ -678,68 +677,71 @@ const CATEGORIES = [
 
 const PRODUCTS = [
   // Falafel & Beans - سندوتشات الفلافل والفول
-  {id:1,  cat:'falafel', name:'سندوتش فلافل لبناني ', price:0.300, time:'5 د', image:'./img/falafel-lebanese-sandwich.webp', emoji:'🧆', stars:'(12)', desc:'فلافل طازة لذيذة'},
-  {id:2,  cat:'falafel', name:'سندوتش فلافل مصري', price:0.300, badge:'popular', time:'5 د', image:'./img/falafel-egyptian-sandwich.webp', emoji:'🧆', stars:'(45)', desc:'فلافل مصرية أصيلة'},
-  {id:3,  cat:'falafel', name:'فلافل 3 حبة', price:0.100, time:'5 د', image:'./img/falafel-plate.webp', emoji:'🥙', stars:'(34)', desc:'فلافل شهية'},
-  {id:4,  cat:'falafel', name:'سندوتش فلافل باذنجان', price:0.400, time:'6 د', image:'./img/falafel-eggplant-sandwich.webp', emoji:'🥙', stars:'(28)', desc:'فلافل بباذنجان'},
-  {id:5,  cat:'falafel', name:'سندوتش فلافل فول', price:0.400, time:'6 د', image:'./img/fool-falafel-sandwich.webp', emoji:'🥙', stars:'(41)', desc:'فلافل وفول'},
-  {id:7,  cat:'falafel', name:'سندوتش فول بالبيض', price:0.400, time:'5 د', image:'./img/fool-with-eggs.webp', emoji:'🍳', stars:'(37)', desc:'فول بالبيض'},
-  {id:8,  cat:'falafel', name:'سندوتش فلافل بيض', price:0.400, time:'5 د', image:'./img/falafel-plate.webp', emoji:'🥙', stars:'(29)', desc:'فلافل وبيض'},
-  {id:9,  cat:'falafel', name:'سندوتش بيض جبن', price:0.400, time:'5 د', image:'./img/egg_cheese.webp', emoji:'🧀', stars:'(33)', desc:'بيض وجبن'},
-  {id:10, cat:'falafel', name:'سندوتش بيض أومليت', price:0.300, time:'5 د', image:'./img/egg_cheese.webp', emoji:'🍳', stars:'(26)', desc:'أومليت لذيذة'},
-  {id:72, cat:'falafel', name:'سندوتش بطاطس', price:0.400, time:'5 د', image:'./img/batata-san.webp', emoji:'🍟', stars:'(44)', desc:'بطاطس مقرمشة'},
-  {id:11, cat:'falafel', name:'سندوتش نقانق (سجق)', price:0.300, time:'5 د', image:'./img/hotdog-sausage-sandwich.webp', emoji:'🌭', stars:'(35)', desc:'نقانق طازة'},
-  {id:69, cat:'falafel', name:'سندوتش فول مصري', price:0.300, time:'5 د', image:'./img/foul_sand.webp', emoji:'🫘', stars:'(51)', desc:'فول مصري أصيل'},
+  {id:1,  cat:'falafel', name:'سندوتش فلافل لبناني ', price:0.300, image:'./img/falafel-lebanese-sandwich.webp', emoji:'🧆'},
+  {id:2,  cat:'falafel', name:'سندوتش فلافل مصري', price:0.300, badge:'popular', image:'./img/falafel-egyptian-sandwich.webp', emoji:'🧆'},
+  {id:3,  cat:'falafel', name:'فلافل 3 حبة', price:0.100, image:'./img/falafel-plate.webp', emoji:'🥙'},
+  {id:4,  cat:'falafel', name:'سندوتش فلافل باذنجان', price:0.400, image:'./img/falafel-eggplant-sandwich.webp', emoji:'🥙'},
+  {id:5,  cat:'falafel', name:'سندوتش فلافل فول', price:0.400, image:'./img/fool-falafel-sandwich.webp', emoji:'🥙'},
+  {id:7,  cat:'falafel', name:'سندوتش فول بالبيض', price:0.400, image:'./img/fool-with-eggs.webp', emoji:'🍳'},
+  {id:8,  cat:'falafel', name:'سندوتش فلافل بيض', price:0.400, image:'./img/flafel-egg-san.webp', emoji:'🥙'},
+  {id:9,  cat:'falafel', name:'سندوتش بيض جبن', price:0.400, image:'./img/egg_cheese.webp', emoji:'🧀'},
+  {id:10, cat:'falafel', name:'سندوتش بيض أومليت', price:0.300, image:'./img/egg.webp', emoji:'🍳'},
+  {id:72, cat:'falafel', name:'سندوتش بطاطس', price:0.400, image:'./img/batata-san.webp', emoji:'🍟'},
+  {id:11, cat:'falafel', name:'سندوتش نقانق (سجق)', price:0.300, image:'./img/hotdog-sausage-sandwich.webp', emoji:'🌭'},
+  {id:69, cat:'falafel', name:'سندوتش فول مصري', price:0.300, image:'./img/foul_sand.webp', emoji:'🫘'},
   
   // Shawarma & Kebab - الشاورما والكبدة
-  {id:12, cat:'shawarma', name:'سندوتش شاورما لبناني', price:0.300, badge:'popular', time:'8 د', image:'./img/shawarma-lebanese.webp', emoji:'🌯', stars:'(156)', desc:'شاورما لبنانية شهية'},
-  {id:13, cat:'shawarma', name:'سندوتش شاورما مصري', price:0.500, time:'9 د', image:'./img/shawarma_egypt_sand.webp', emoji:'🌮', stars:'(89)', desc:'شاورما مصري'},
-  {id:14, cat:'shawarma', name:'سندوتش شاورما ميكس', price:0.500, time:'9 د', image:'./img/shawarma_egypt_sand.webp', emoji:'🌮', stars:'(67)', desc:'شاورما مشكلة'},
-  {id:15, cat:'shawarma', name:'سندوتش دجاج زنجر', price:0.800, time:'10 د', image:'./img/zengr-san.webp', emoji:'🍗', stars:'(112)', desc:'دجاج مقرمش'},
-  {id:16, cat:'shawarma', name:'سندوتش كبدة مصري', price:0.500, time:'8 د', image:'./img/liver_egypt_sand.webp', emoji:'🍖', stars:'(76)', desc:'كبدة مصرية'},
-  {id:17, cat:'shawarma', name:'سندوتش برجر', price:1.000, time:'10 د', image:'./img/burger.webp', emoji:'🍔', stars:'(134)', desc:'برجر شهي'},
-  {id:18, cat:'shawarma', name:'صاروخ شاورما', price:0.700, time:'10 د', image:'./img/rocket_shawarma.webp', emoji:'🚀', stars:'(94)', desc:'صاروخ شاورما'},
-  {id:19, cat:'shawarma', name:'صاروخ كبدة', price:0.800, time:'10 د', image:'./img/rocket_liver.webp', emoji:'🚀', stars:'(88)', desc:'صاروخ كبدة'},
-  {id:22, cat:'shawarma', name:'صاروخ روبيان', price:1.000, time:'12 د', image:'./img/robyan_sand.webp', emoji:'🦐', stars:'(102)', desc:'روبيان طازة'},
+  {id:12, cat:'shawarma', name:'سندوتش شاورما لبناني', price:0.300, badge:'popular', image:'./img/shawarma-lebanese.webp', emoji:'🌯'},
+  {id:13, cat:'shawarma', name:'سندوتش شاورما مصري', price:0.500, image:'./img/shawarma_egypt_sand.webp', emoji:'🌮'},
+  {id:14, cat:'shawarma', name:'سندوتش شاورما ميكس', price:0.500, image:'./img/shawarma_egypt_sand.webp', emoji:'🌮'},
+  {id:15, cat:'shawarma', name:'سندوتش دجاج زنجر', price:0.800, image:'./img/zengr-san.webp', emoji:'🍗'},
+  {id:16, cat:'shawarma', name:'سندوتش كبدة مصري', price:0.500, image:'./img/liver_egypt_sand.webp', emoji:'🍖'},
+  {id:17, cat:'shawarma', name:'سندوتش برجر', price:1.000, image:'./img/burger.webp', emoji:'🍔'},
+  {id:18, cat:'shawarma', name:'صاروخ شاورما', price:0.700, image:'./img/rocket_shawarma.webp', emoji:'🚀'},
+  {id:19, cat:'shawarma', name:'صاروخ كبدة', price:0.800, image:'./img/rocket_liver.webp', emoji:'🚀'},
+  {id:75, cat:'shawarma', name:'صاروخ ستيك لحم', price:1.000, image:'./img/stak.webp', emoji:'🚀'},
+  {id:22, cat:'shawarma', name:'صاروخ روبيان', price:1.000, image:'./img/robyan_sand.webp', emoji:'🦐'},
   
   // Crepe - الكريب
-  {id:26, cat:'crepe', name:'كريب شاورما', price:1.500, badge:'popular', time:'12 د', image:'./img/crepe_shawarma.webp', emoji:'🥙', stars:'(98)', desc:'كريب شاورما فاخر'},
-  {id:27, cat:'crepe', name:'كريب كبدة', price:1.500, time:'12 د', image:'./img/crepe_liver.webp', emoji:'🥐', stars:'(87)', desc:'كريب كبدة'},
-  {id:28, cat:'crepe', name:'كريب زنجر', price:1.500, time:'12 د', image:'./img/crepe_zinger.webp', emoji:'🥐', stars:'(93)', desc:'كريب دجاج'},
-  {id:29, cat:'crepe', name:'كريب ستربس', price:1.500, time:'13 د', image:'./img/crepe_strips.webp', emoji:'🥐', stars:'(79)', desc:'كريب ستريبس'},
-  {id:30, cat:'crepe', name:'كريب نقانق', price:1.500, time:'12 د', image:'./img/crepe_sausage.webp', emoji:'🥐', stars:'(65)', desc:'كريب نقانق'},
-  {id:31, cat:'crepe', name:'كريب بانيه', price:1.500, time:'12 د', image:'./img/crepe_pane.webp', emoji:'🥐', stars:'(71)', desc:'كريب بانيه'},
-  {id:33, cat:'crepe', name:'كريب بطاطس', price:1.500, time:'12 د', image:'./img/crepe_fries.webp', emoji:'🥐', stars:'(58)', desc:'كريب بطاطس'},
-  {id:34, cat:'crepe', name:'كريب فلافل', price:1.500, time:'12 د', image:'./img/crepe_falafel.webp', emoji:'🥐', stars:'(82)', desc:'كريب فلافل'},
+  {id:26, cat:'crepe', name:'كريب شاورما', price:1.500, badge:'popular', image:'./img/crepe_shawarma.webp', emoji:'🥙'},
+  {id:27, cat:'crepe', name:'كريب كبدة', price:1.500, image:'./img/crepe_liver.webp', emoji:'🥐'},
+  {id:28, cat:'crepe', name:'كريب زنجر', price:1.500, image:'./img/crepe_zinger.webp', emoji:'🥐'},
+  {id:29, cat:'crepe', name:'كريب ستربس', price:1.500, image:'./img/crepe_strips.webp', emoji:'🥐'},
+  {id:30, cat:'crepe', name:'كريب نقانق', price:1.500, image:'./img/crepe_sausage.webp', emoji:'🥐'},
+  {id:31, cat:'crepe', name:'كريب بانيه', price:1.500, image:'./img/creb.webp', emoji:'🥐'},
+  {id:33, cat:'crepe', name:'كريب بطاطس', price:1.500, image:'./img/crepe_fries.webp', emoji:'🥐'},
+  {id:34, cat:'crepe', name:'كريب فلافل', price:1.500, image:'./img/crepe_falafel.webp', emoji:'🥐'},
   
   // Plates & Meals - الصحون والوجبات
-  {id:38, cat:'plates', name:'صحن شاورما صغير', price:1.500, time:'14 د', image:'./img/shawarma-plate.webp'},
-  {id:39, cat:'plates', name:'صحن شاورما كبير', price:2.000, time:'16 د', image:'./img/shawarma-plate-2.webp'},
-  {id:41, cat:'plates', name:'صحن كبدة صغير', price:1.500, time:'15 د', image:'./img/liver-plate-small.webp'},
-  {id:42, cat:'plates', name:'صحن كبدة كبير', price:2.000, time:'16 د', image:'./img/liver-plate-2.webp'},
-  {id:45, cat:'plates', name:'صحن السعادة', price:2.000, time:'15 د', image:'./img/mixed-plate.webp'},
-  {id:6,  cat:'plates', name:'صحن فول مصري', price:0.700, time:'5 د', image:'./img/fool-plate.webp'},
-  {id:47, cat:'plates', name:'صحن مسقعة', price:0.800, time:'15 د', image:'./img/moussaka-plate.webp'},
-  {id:48, cat:'plates', name:'صحن شكشوكة', price:0.700, time:'12 د', image:'./img/shakshouka-plate.webp'},
-  {id:50, cat:'plates', name:'صحن بطاطس', price:0.500, time:'12 د', image:'./img/plate_fries.webp'},
-  {id:51, cat:'plates', name:'صحن باذنجان', price:0.500, time:'12 د', image:'./img/plate_eggplant.webp'},
-  {id:73, cat:'plates', name:'صحن فلافل', price:0.500, time:'12 د', image:'./img/flafel-plat.webp'},
-  {id:52, cat:'plates', name:'وجبة عربي شاورما', price:1.500, badge:'popular', time:'18 د', image:'./img/arabic_meal_2.webp', emoji:'🍽️', stars:'(203)', desc:'وجبة عربية أصيلة'},
-  {id:53, cat:'plates', name:'وجبة دلع كرشك', price:3.000, time:'20 د', image:'./img/dala3_kershak.webp'},
+  {id:38, cat:'plates', name:'صحن شاورما صغير', price:1.500, image:'./img/shawarma-plate.webp', emoji:'🍽️'},
+  {id:39, cat:'plates', name:'صحن شاورما كبير', price:2.000, image:'./img/shawarma-plate-2.webp', emoji:'🍽️'},
+  {id:41, cat:'plates', name:'صحن كبدة صغير', price:1.500, image:'./img/liver-plate-small.webp', emoji:'🍽️'},
+  {id:42, cat:'plates', name:'صحن كبدة كبير', price:2.000, image:'./img/liver-plate-2.webp', emoji:'🍽️'},
+  {id:45, cat:'plates', name:'صحن السعادة', price:2.000, image:'./img/mixed-plate.webp', emoji:'🍽️'},
+  {id:76, cat:'plates', name:'صحن كبدة شاورما ميكس "صغير"', price:1.500, image:'./img/plat-mix-kebda-shawerma.webp', emoji:'🍽️'},
+  {id:77, cat:'plates', name:'صحن كبدة شاورما ميكس "كبير"', price:2.000, image:'./img/plat-mix-kebda-shawerma.webp', emoji:'🍽️'},
+  {id:6,  cat:'plates', name:'صحن فول مصري', price:0.700, image:'./img/fool-plate.webp', emoji:'🫘'},
+  {id:47, cat:'plates', name:'صحن مسقعة', price:0.800, image:'./img/moussaka-plate.webp', emoji:'🍽️'},
+  {id:48, cat:'plates', name:'صحن شكشوكة', price:0.700, image:'./img/shakshouka-plate.webp', emoji:'🍳'},
+  {id:50, cat:'plates', name:'صحن بطاطس', price:0.500, image:'./img/plate_fries.webp', emoji:'🍟'},
+  {id:51, cat:'plates', name:'صحن باذنجان', price:0.500, image:'./img/plate_eggplant.webp', emoji:'🍆'},
+  {id:73, cat:'plates', name:'صحن فلافل', price:0.500, image:'./img/flafel-plat.webp', emoji:'🥙'},
+  {id:52, cat:'plates', name:'وجبة عربي شاورما', price:1.500, badge:'popular', image:'./img/arabic_meal_2.webp', emoji:'🍽️'},
+  {id:53, cat:'plates', name:'وجبة دلع كرشك', price:3.000, image:'./img/dala3_kershak.webp', emoji:'👑'},
   
   // Drinks - مشروبات
-  {id:55, cat:'drinks', name:'عصير مانجو', price:0.700, time:'5 د', image:'./img/mango.webp'},
-  {id:56, cat:'drinks', name:'عصير فراولة', price:0.700, time:'5 د', image:'./img/strawberry.webp'},
-  {id:57, cat:'drinks', name:'عصير برتقال', price:0.700, time:'5 د', image:'./img/orange.webp'},
-  {id:58, cat:'drinks', name:'كوكتيل فواكه', price:0.700, time:'5 د', image:'./img/mango-strawberry-orange-cocktail.webp'},
-  {id:59, cat:'drinks', name:'ليمون نعناع', price:0.600, time:'5 د', image:'./img/lemon_mint.webp'},
-  {id:60, cat:'drinks', name:'موز بحليب', price:0.600, time:'5 د', image:'./img/banana_milk.webp'},
-  {id:61, cat:'drinks', name:'تانج برتقال', price:0.300, time:'2 د', image:'./img/tang-vimto-nescafe-pepsi.webp'},
-  {id:63, cat:'drinks', name:'نسكافيه', price:0.300, time:'2 د', image:'./img/nescafe.webp'},
-  {id:64, cat:'drinks', name:'بيبسي', price:0.300, time:'2 د', image:'./img/pepsi.webp'},
-  {id:65, cat:'drinks', name:'شاي كشري', price:0.200, time:'3 د', image:'./img/koshari-tea.webp'},
-  {id:68, cat:'drinks', name:'سنتوب', price:0.150, time:'1 د', image:'./img/suntop.webp'},
-  {id:71, cat:'drinks', name:'ماء صغير', price:0.100, time:'1 د', image:'./img/small-water.webp'},
+  {id:55, cat:'drinks', name:'عصير مانجو', price:0.700, image:'./img/mango.webp', emoji:'🥤'},
+  {id:56, cat:'drinks', name:'عصير فراولة', price:0.700, image:'./img/strawberry.webp', emoji:'🥤'},
+  {id:57, cat:'drinks', name:'عصير برتقال', price:0.700, image:'./img/orange.webp', emoji:'🥤'},
+  {id:58, cat:'drinks', name:'كوكتيل فواكه', price:0.700, image:'./img/mango-strawberry-orange-cocktail.webp', emoji:'🥤'},
+  {id:59, cat:'drinks', name:'ليمون نعناع', price:0.600, image:'./img/lemon_mint.webp', emoji:'🥤'},
+  {id:60, cat:'drinks', name:'موز بحليب', price:0.600, image:'./img/banana_milk.webp', emoji:'🥤'},
+  {id:61, cat:'drinks', name:'تانج برتقال', price:0.300, image:'./img/tang-vimto-nescafe-pepsi.webp', emoji:'🥤'},
+  {id:63, cat:'drinks', name:'نسكافيه', price:0.300, image:'./img/nescafe.webp', emoji:'☕'},
+  {id:64, cat:'drinks', name:'بيبسي', price:0.300, image:'./img/pepsi.webp', emoji:'🥤'},
+  {id:65, cat:'drinks', name:'شاي كشري', price:0.200, image:'./img/koshari-tea.webp', emoji:'🍵'},
+  {id:68, cat:'drinks', name:'سنتوب', price:0.150, image:'./img/suntop.webp', emoji:'🥤'},
+  {id:71, cat:'drinks', name:'ماء صغير', price:0.100, image:'./img/small-water.webp', emoji:'💧'},
 ];
 const IMAGE_MAP = {
   fool: 'https://images.unsplash.com/photo-1604908177529-3e4dbc8ed0b8?auto=format&fit=crop&w=900&q=80',
@@ -980,13 +982,38 @@ function addItem(id){
   const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
   const ex = cart.find(i=>i.id===id);
   if(ex) ex.qty++; else cart.push({id,name:p.name,price:p.price,emoji:p.emoji,qty:1});
-  save(); syncCartUI(); renderProducts(); toast(`${p.emoji} تمت الإضافة إلى السلة`,'success');
+  save(); syncCartUI(); updateProductButton(id); renderCartItems(); toast(`${p.emoji} تمت الإضافة إلى السلة`,'success');
 }
+
+function updateProductButton(id){
+  const cartItem = cart.find(c=>c.id===id);
+  const qty = cartItem ? cartItem.qty : 0;
+  const productCard = document.querySelector(`[data-product-id="${id}"]`);
+  if(!productCard) return;
+  
+  const footerDiv = productCard.querySelector('.card-footer');
+  if(!footerDiv) return;
+  
+  let ctrl = '';
+  if(qty>0){
+    ctrl = `<div class="qty-ctrl">
+     <button class="qty-btn qty-minus" onclick="changeQty(${id},-1)" aria-label="تقليل">−</button>
+     <span class="qty-num">${qty}</span>
+     <button class="qty-btn qty-plus"  onclick="changeQty(${id},1)"  aria-label="زيادة">+</button>
+   </div>`;
+  } else {
+    ctrl = `<button class="btn-add" onclick="addItem(${id})" aria-label="إضافة للسلة">+</button>`;
+  }
+  
+  const priceDiv = footerDiv.querySelector('.card-price');
+  footerDiv.innerHTML = priceDiv.outerHTML + ctrl;
+}
+
 function changeQty(id,delta){
   const item = cart.find(i=>i.id===id); if(!item) return;
   item.qty += delta;
   if(item.qty<=0){ toast(`${item.emoji} تمت الإزالة من السلة`,'info'); cart=cart.filter(i=>i.id!==id); }
-  save(); syncCartUI(); renderProducts(); renderCartItems();
+  save(); syncCartUI(); updateProductButton(id); renderCartItems();
 }
 function clearCart(){ 
   cart=[]; 
@@ -1060,17 +1087,19 @@ function toggleDeliveryOptions(){
   const orderType = document.getElementById('orderType').value;
   const phoneRow = document.getElementById('phoneRow');
   const deliveryMethod = document.getElementById('deliveryMethod');
-  const addrField = document.getElementById('custAddr');
   const locationSection = document.getElementById('locationSection');
+  
   if(orderType === 'delivery'){
+    // توصيل - اظهر رقم الهاتف وقسم الموقع
     phoneRow.style.display = 'grid';
+    deliveryMethod.innerHTML = '<option value="standard">توصيل</option>'; // توصيل فقط
     deliveryMethod.style.display = 'block';
-    addrField.style.display = 'none';
-    locationSection.style.display = 'block'; // إظهار قسم الموقع
+    locationSection.style.display = 'block';
   } else {
+    // سفرة - اظهر خيار استلام من المطعم فقط
     phoneRow.style.display = 'none';
-    deliveryMethod.style.display = 'none';
-    addrField.style.display = 'none';
+    deliveryMethod.innerHTML = '<option value="pickup_point">استلام من المطعم</option>'; // استلام فقط
+    deliveryMethod.style.display = 'block';
     locationSection.style.display = 'none';
   }
 }
@@ -1182,7 +1211,8 @@ function sendWhatsApp(){
   let m=`🌯 *طلب جديد من مطعم الأفندر المتميز*\n━━━━━━━━━━━━━━━━━━\n👤 *الاسم:* ${name}\n`;
   if(customerPhone) m += `📱 *الهاتف:* ${customerPhone}\n`;
   m += `📦 *نوع الطلب:* ${orderType==='delivery' ? 'توصيل' : 'سفرة'}\n`;
-  if(orderType === 'delivery'){ m+=`🚚 *طريقة التوصيل:* ${deliveryMethod === 'express' ? 'سريع' : deliveryMethod === 'pickup_point' ? 'استلام من المطعم' : 'عادي'}\n`; }
+  if(orderType === 'delivery'){ m+=`🚚 *طريقة التوصيل:* توصيل\n`; }
+  if(orderType === 'pickup'){ m+=`🏪 *طريقة الاستلام:* استلام من المطعم\n`; }
   if(orderType === 'delivery'){
     if(customerLocation){
       m+=`📍 *الموقع:* https://maps.google.com/?q=${customerLocation.latitude},${customerLocation.longitude}\n`;
@@ -1192,7 +1222,7 @@ function sendWhatsApp(){
     }
   }
   m+=`━━━━━━━━━━━━━━━━━━\n🧾 *تفاصيل الطلب:*\n`;
-  cart.forEach(i=>{ m+=`${i.emoji} ${i.name} × ${i.qty} = ${formatPrice(i.price*i.qty)}\n`; });
+  cart.forEach(i=>{ m+=`• ${i.name} × ${i.qty} = ${formatPrice(i.price*i.qty)}\n`; });
   m+=`━━━━━━━━━━━━━━━━━━\n💰 *المجموع:* ${formatPrice(sub)}\n🛵 *رسوم التوصيل:* ${orderType==='delivery' ? formatPrice(del) : '0.000 ر.ع'}\n✅ *الإجمالي:* ${formatPrice(grand)}\n`;
   if(notes) m+=`📝 *ملاحظات:* ${notes}\n`;
   m+=`\n🙏 شكراً لطلبك من مطعم الأفندر المتميز!`;  window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(m)}`,'_blank');
